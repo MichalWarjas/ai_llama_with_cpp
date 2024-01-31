@@ -8,7 +8,7 @@ while True:
     chunk = input("Enter your input: ")
     if(chunk == "[/INST]"):
         break
-    elif(chunk != "[INST]"):
+    else:
         lines.append(chunk)
             
     
@@ -17,6 +17,8 @@ initial_input = "\n".join(lines)
 prompt = f"""\
 [Below is an instruction that describes a task. Write a response that appropriately completes the request.\n\n### Instruction:\n{initial_input}\n\n### Response:""" # Prompt
 
+
+follow_lines = []
 while True:
     # Get user input
 
@@ -29,7 +31,14 @@ while True:
     print(output['choices'][0]['text'])
     print(json.dumps(output["usage"], indent=4))
 
-    user_input = input("Enter your input: ")
+    while True:
+        follow_chunk = input("Enter your input: ")
+        if(follow_chunk == "[/INST]"):
+            break
+        else:
+            follow_lines.append(follow_chunk)
+
+    user_input = "".join(follow_lines)
 
     prompt = F"{output['choices'][0]['text']}\n \n\n### Instruction:\n{user_input}\n\n### Response:"
 

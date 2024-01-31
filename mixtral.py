@@ -1,7 +1,7 @@
 from llama_cpp import Llama
 import json
 
-llm = Llama(model_path="models/30B/mixtral-8x7b-v0.1.Q4_K_M.gguf", chat_format="llama-2",n_gpu_layers=3, n_ctx=2048)
+llm = Llama(model_path="models/30B/mixtral-8x7b-v0.1.Q4_K_M.gguf",n_gpu_layers=5, n_ctx=4000, n_threads=4)
 
 lines = []
 while True:
@@ -15,7 +15,8 @@ while True:
 initial_input = "\n".join(lines)
 
 prompt = f"""\
-<s> [INST] {initial_input} [/INST] Assistant: </s>""" # Prompt
+[INST]{initial_input}[/INST]
+""" # Prompt
 
 while True:
     # Get user input
@@ -31,7 +32,7 @@ while True:
 
     user_input = input("Enter your input: ")
 
-    prompt = f"{output['choices'][0]['text']}\n [INST]{user_input}\n [/INST]"
+    prompt = F"{output['choices'][0]['text']}\n \n\n### Instruction:\n{user_input}\n\n### Response:"
 
     # Check if user wants to exit
     if user_input == "/bye":
