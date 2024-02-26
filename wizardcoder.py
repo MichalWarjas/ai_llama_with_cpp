@@ -1,7 +1,7 @@
 from llama_cpp import Llama
 import json
 
-llm = Llama(model_path="models/30B/wizardcoder-33b-v1.1.Q5_K_M.gguf",n_gpu_layers=6, n_ctx=4000)
+llm = Llama(model_path="models/30B/wizardcoder-33b-v1.1.Q5_K_M.gguf",n_gpu_layers=6, n_ctx=10000)
 
 lines = []
 while True:
