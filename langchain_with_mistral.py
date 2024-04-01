@@ -3,9 +3,8 @@ from langchain_core.callbacks import CallbackManager, StreamingStdOutCallbackHan
 from langchain_core.prompts import PromptTemplate
 from langchain.chains import LLMChain
 
-template = '''text = "<s>[INST] What is your favourite condiment? [/INST]"
-"Well, I'm quite partial to a good squeeze of fresh lemon juice. It adds just the right amount of zesty flavour to whatever I'm cooking up in the kitchen!</s> "
-"[INST] {question} [/INST]"
+template = '''
+"<s>[INST] {question} [/INST]"
 '''
 
 prompt = PromptTemplate.from_template(template)
@@ -30,14 +29,28 @@ llm = LlamaCpp(
     callback_manager=callback_manager,
     verbose=True,  # Verbose is required to pass to the callback manager
 )
-
-question = """
-Help me write a python program for chat with local models using llama cpp and langchain. I need the ability to keep conversation context(history)
-"""
-
-
 # Chain
-llm_chain = LLMChain(prompt=prompt, llm=llm)
-llm_chain.run({"question": question})
+
+while True:
+
+    llm_chain = LLMChain(prompt=prompt, llm=llm)
+
+    question = input("Enter your input: ")
+
+    response = llm_chain.invoke({"question": question})
+
+    r_question = response['question']
+    r_text = response['text']
+
+    r_question_placeholder = "{question}"
+    following_template = f'''
+    "<s>[INST] {r_question} [/INST]\n
+    {r_text}\n\n
+    [INST] {r_question_placeholder} [/INST]
+    "  
+    '''
+
+    prompt = PromptTemplate.from_template(following_template)
+
 
 # llm.invoke(question)
