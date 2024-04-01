@@ -1,12 +1,16 @@
 from langchain_community.llms import LlamaCpp
 from langchain_core.callbacks import CallbackManager, StreamingStdOutCallbackHandler
 from langchain_core.prompts import PromptTemplate
+from langchain.chains import LLMChain
 
-template = """Question: {question}
-
-Answer: Let's work this out in a step by step way to be sure we have the right answer."""
+template = '''text = "<s>[INST] What is your favourite condiment? [/INST]"
+"Well, I'm quite partial to a good squeeze of fresh lemon juice. It adds just the right amount of zesty flavour to whatever I'm cooking up in the kitchen!</s> "
+"[INST] {question} [/INST]"
+'''
 
 prompt = PromptTemplate.from_template(template)
+
+
 
 # Callbacks support token-wise streaming
 callback_manager = CallbackManager([StreamingStdOutCallbackHandler()])
@@ -28,6 +32,12 @@ llm = LlamaCpp(
 )
 
 question = """
-Is there a way to check how my entry gate remote control can be set to copy mode? I cant find any info about the model
+Help me write a python program for chat with local models using llama cpp and langchain. I need the ability to keep conversation context(history)
 """
-llm.invoke(question)
+
+
+# Chain
+llm_chain = LLMChain(prompt=prompt, llm=llm)
+llm_chain.run({"question": question})
+
+# llm.invoke(question)
