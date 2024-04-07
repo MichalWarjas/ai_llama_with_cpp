@@ -6,3 +6,4 @@ embeding/*
 *.pyc
 __pycache__/*
 SOURCE_DOCUMENTS/*
+*.log

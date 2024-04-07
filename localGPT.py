@@ -17,7 +17,30 @@ from constants import (
     CHROMA_SETTINGS,
 )
 
-prompt, history = get_prompt_template("mistral")
+templates_names = ["mistral", "llama"]
+gpu_layers =[["7B",-1],["13B", 15], ["30B", 8]]
+
+LLM_PATH = "models/13B/codellama-13b-instruct.Q5_K_M.gguf"
+
+for temp in templates_names:
+    if(LLM_PATH.find(temp)) > -1:
+        template_name = temp
+        break
+
+n_gpu_layers = 5  # The number of layers to put on the GPU. The rest will be on the CPU. If you don't know how many layers there are, you can use -1 to move all to GPU. Default 5
+
+for layer in gpu_layers:
+    if(LLM_PATH.find(layer[0])) > -1:
+        n_gpu_layers = layer[1]
+        model_size = layer[0]
+        break
+
+
+print(f"Loading model type {template_name}")
+print(f"Using {n_gpu_layers}. Model size: {model_size}")
+
+
+prompt, history = get_prompt_template(template_name)
 
 # prompt = PromptTemplate.from_template(template)
 
@@ -26,14 +49,13 @@ prompt, history = get_prompt_template("mistral")
 # Callbacks support token-wise streaming
 callback_manager = CallbackManager([StreamingStdOutCallbackHandler()])
 
-n_gpu_layers = -1  # The number of layers to put on the GPU. The rest will be on the CPU. If you don't know how many layers there are, you can use -1 to move all to GPU.
 n_batch = 512  # Should be between 1 and n_ctx, consider the amount of VRAM in your GPU.
 n_ctx = 20000
 max_tokens = 5000
 
 # Make sure the model path is correct for your system!
 llm = LlamaCpp(
-    model_path="models/7B/mistral-7b-instruct-v0.2.Q5_K_M.gguf",
+    model_path=LLM_PATH,
     n_gpu_layers=n_gpu_layers,
     n_batch=n_batch,
     n_ctx = n_ctx,
