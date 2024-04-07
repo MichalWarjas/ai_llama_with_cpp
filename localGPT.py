@@ -10,20 +10,16 @@ from transformers import (
     pipeline,
 )
 from utils import get_embeddings
+from templates import get_prompt_template
 
 from constants import (
-    EMBEDDING_MODEL_NAME,
     PERSIST_DIRECTORY,
-    MAX_NEW_TOKENS,
-    MODELS_PATH,
     CHROMA_SETTINGS,
 )
 
-template = '''
-"<s>[INST] {question} [/INST]"
-'''
+prompt, history = get_prompt_template("mistral")
 
-prompt = PromptTemplate.from_template(template)
+# prompt = PromptTemplate.from_template(template)
 
 
 
@@ -67,25 +63,30 @@ qa = RetrievalQA.from_chain_type(
         )
 
 while True:
+    query = input("\nEnter a query: ")
+    if query == "exit":
+        break
+    # Get the answer from the chain
+    res = qa(query)
+    answer, docs = res["result"], res["source_documents"]
 
-    llm_chain = LLMChain(prompt=prompt, llm=llm)
+    # Print the result
+    print("\n\n> Question:")
+    print(query)
+    print("\n> Answer:")
+    print(answer)
+'''
+    if show_sources:  # this is a flag that you can set to disable showing answers.
+        # # Print the relevant sources used for the answer
+        print("----------------------------------SOURCE DOCUMENTS---------------------------")
+        for document in docs:
+            print("\n> " + document.metadata["source"] + ":")
+            print(document.page_content)
+            print("----------------------------------SOURCE DOCUMENTS---------------------------")
 
-    question = input("Enter your input: ")
+    # Log the Q&A to CSV only if save_qa is True
+    if save_qa:
+        utils.log_to_csv(query, answer)
 
-    response = llm_chain.invoke({"question": question})
-
-    r_question = response['question']
-    r_text = response['text']
-
-    r_question_placeholder = "{question}"
-    following_template = f'''
-    "<s>[INST] {r_question} [/INST]\n
-    {r_text}\n\n
-    [INST] {r_question_placeholder} [/INST]
-    "  
-    '''
-
-    prompt = PromptTemplate.from_template(following_template)
-
-
+'''
 # llm.invoke(question)

@@ -1,3 +1,7 @@
+Partially copied from (localGPT.py and dependencies)
+https://github.com/PromtEngineer/localGPT
+
+
 Requirements:
 Install llama-cpp-python
 
