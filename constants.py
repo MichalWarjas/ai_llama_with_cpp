@@ -58,4 +58,4 @@ DOCUMENT_MAP = {
 }
 
 # Default Instructor Model
-EMBEDDING_MODEL_NAME = "models/7B/mistral-7b-instruct-v0.2.Q5_K_M.gguf"  # Uses 1.5 GB of VRAM (High Accuracy with lower VRAM usage)
+EMBEDDING_MODEL_NAME = "embeding/instructor-large"  # Uses 1.5 GB of VRAM (High Accuracy with lower VRAM usage)

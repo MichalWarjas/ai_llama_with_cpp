@@ -1,3 +1,7 @@
 .venv
 models/*
 *.html
+DB/*
+embeding/*
+*.pyc
+__pycache__/*
