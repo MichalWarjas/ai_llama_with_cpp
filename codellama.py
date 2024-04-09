@@ -1,7 +1,7 @@
 from llama_cpp import Llama
 import json
 
-llm = Llama(model_path="models/7B/codellama-7b-instruct.Q4_K_M.gguf", chat_format="llama-2",n_gpu_layers=60, n_ctx=10048)
+llm = Llama(model_path="models/13B/codellama-13b-instruct.Q5_K_M.gguf", chat_format="llama-2",n_gpu_layers=25, n_ctx=10048)
 
 lines = []
 while True:

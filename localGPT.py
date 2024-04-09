@@ -18,16 +18,17 @@ from constants import (
 )
 
 templates_names = ["mistral", "llama"]
-gpu_layers =[["7B",-1],["13B", 15], ["30B", 8]]
+gpu_layers =[["7B",-1],["13B", 15], ["30B", 10]]
 
-LLM_PATH = "models/13B/codellama-13b-instruct.Q5_K_M.gguf"
+LLM_PATH = "models/7B/mistral-7b-instruct-v0.2.Q5_K_M.gguf"
 
 for temp in templates_names:
     if(LLM_PATH.find(temp)) > -1:
         template_name = temp
         break
 
-n_gpu_layers = 5  # The number of layers to put on the GPU. The rest will be on the CPU. If you don't know how many layers there are, you can use -1 to move all to GPU. Default 5
+n_gpu_layers = 8  # The number of layers to put on the GPU. The rest will be on the CPU. If you don't know how many layers there are, you can use -1 to move all to GPU. Default 5
+model_size = "Other"
 
 for layer in gpu_layers:
     if(LLM_PATH.find(layer[0])) > -1:

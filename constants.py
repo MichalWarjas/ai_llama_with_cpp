@@ -46,6 +46,8 @@ N_BATCH = 512
 DOCUMENT_MAP = {
     ".html": UnstructuredHTMLLoader,
     ".txt": TextLoader,
+    ".js": TextLoader,
+    ".css": TextLoader,
     ".md": UnstructuredMarkdownLoader,
     ".py": TextLoader,
     # ".pdf": PDFMinerLoader,
