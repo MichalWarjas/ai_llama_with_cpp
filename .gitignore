@@ -7,3 +7,4 @@ embeding/*
 __pycache__/*
 SOURCE_DOCUMENTS/*
 *.log
+.env

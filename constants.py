@@ -7,6 +7,8 @@ from chromadb.config import Settings
 from langchain_community.document_loaders import CSVLoader, PDFMinerLoader, TextLoader, UnstructuredExcelLoader, Docx2txtLoader
 from langchain_community.document_loaders import UnstructuredFileLoader, UnstructuredMarkdownLoader
 from langchain_community.document_loaders import UnstructuredHTMLLoader
+# from langchain_community.document_loaders import PyPDFLoader
+from langchain_community.document_loaders import UnstructuredPDFLoader
 
 
 # load_dotenv()
@@ -50,8 +52,9 @@ DOCUMENT_MAP = {
     ".css": TextLoader,
     ".md": UnstructuredMarkdownLoader,
     ".py": TextLoader,
-    # ".pdf": PDFMinerLoader,
-    ".pdf": UnstructuredFileLoader,
+#     ".pdf": PyPDFLoader,
+   # ".pdf": UnstructuredFileLoader,
+    ".pdf": UnstructuredPDFLoader,
     ".csv": CSVLoader,
     ".xls": UnstructuredExcelLoader,
     ".xlsx": UnstructuredExcelLoader,

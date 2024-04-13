@@ -5,6 +5,8 @@ from langchain.chains import LLMChain
 from langchain.chains import RetrievalQA
 from langchain_community.vectorstores import Chroma
 import torch
+import os
+from dotenv import load_dotenv
 from transformers import (
     GenerationConfig,
     pipeline,
@@ -17,17 +19,23 @@ from constants import (
     CHROMA_SETTINGS,
 )
 
-templates_names = ["mistral", "llama"]
-gpu_layers =[["7B",-1],["13B", 15], ["30B", 10]]
+load_dotenv()
 
-LLM_PATH = "models/7B/mistral-7b-instruct-v0.2.Q5_K_M.gguf"
+show_sources = os.getenv("SHOW_SOURCES")
+
+print(f"Show sources: {show_sources}. Variable type: {type(show_sources)}")
+
+templates_names = ["mistral", "llama"]
+gpu_layers =[["7B",-1],["13B", 15], ["30B", 12]]
+
+LLM_PATH = "models/7B/bielik-7b-instruct-v0.1.Q8_0.gguf"
 
 for temp in templates_names:
     if(LLM_PATH.find(temp)) > -1:
         template_name = temp
         break
 
-n_gpu_layers = 8  # The number of layers to put on the GPU. The rest will be on the CPU. If you don't know how many layers there are, you can use -1 to move all to GPU. Default 5
+n_gpu_layers = 10  # The number of layers to put on the GPU. The rest will be on the CPU. If you don't know how many layers there are, you can use -1 to move all to GPU. Default 5
 model_size = "Other"
 
 for layer in gpu_layers:
@@ -85,6 +93,7 @@ qa = RetrievalQA.from_chain_type(
             },
         )
 
+
 while True:
     query = input("\nEnter a query: ")
     if query == "exit":
@@ -98,7 +107,7 @@ while True:
     print(query)
     print("\n> Answer:")
     print(answer)
-'''
+
     if show_sources:  # this is a flag that you can set to disable showing answers.
         # # Print the relevant sources used for the answer
         print("----------------------------------SOURCE DOCUMENTS---------------------------")
@@ -107,9 +116,5 @@ while True:
             print(document.page_content)
             print("----------------------------------SOURCE DOCUMENTS---------------------------")
 
-    # Log the Q&A to CSV only if save_qa is True
-    if save_qa:
-        utils.log_to_csv(query, answer)
 
-'''
 # llm.invoke(question)
