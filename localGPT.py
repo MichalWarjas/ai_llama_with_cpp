@@ -6,6 +6,7 @@ from langchain.chains import RetrievalQA
 from langchain_community.vectorstores import Chroma
 import torch
 import os
+import sys
 from dotenv import load_dotenv
 from transformers import (
     GenerationConfig,
@@ -25,15 +26,19 @@ show_sources = os.getenv("SHOW_SOURCES")
 
 print(f"Show sources: {show_sources}. Variable type: {type(show_sources)}")
 
-templates_names = ["mistral", "llama"]
+templates_names = ["mistral", "llama", "mixtral", "bielik"]
 gpu_layers =[["7B",-1],["13B", 15], ["30B", 12]]
 
-LLM_PATH = "models/7B/bielik-7b-instruct-v0.1.Q8_0.gguf"
+LLM_PATH = "models/13B/codellama-13b-instruct.Q5_K_M.gguf"
 
 for temp in templates_names:
     if(LLM_PATH.find(temp)) > -1:
         template_name = temp
         break
+
+if not template_name:
+    print(f"No template found for model {LLM_PATH}")
+    sys.exit(1)
 
 n_gpu_layers = 10  # The number of layers to put on the GPU. The rest will be on the CPU. If you don't know how many layers there are, you can use -1 to move all to GPU. Default 5
 model_size = "Other"

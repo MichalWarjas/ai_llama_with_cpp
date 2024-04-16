@@ -27,7 +27,7 @@ def get_prompt_template(system_prompt=system_prompt, promptTemplate_type=None, h
 
             prompt_template = B_INST + SYSTEM_PROMPT + instruction + E_INST
             prompt = PromptTemplate(input_variables=["context", "question"], template=prompt_template)
-    elif promptTemplate_type == "mistral" or promptTemplate_type == "mixtral":
+    elif promptTemplate_type == "mistral" or promptTemplate_type == "mixtral" or promptTemplate_type == "bielik":
         B_INST, E_INST = "<s>[INST] ", " [/INST]"
         if history:
             prompt_template = (
