@@ -21,7 +21,7 @@ max_tokens = 5000
 
 # Make sure the model path is correct for your system!
 llm = LlamaCpp(
-    model_path="models/7B/bielik-7b-instruct-v0.1.Q8_0.gguf",
+    model_path="models/7B/mistral-7b-instruct-v0.2.Q5_K_M.gguf",
     n_gpu_layers=n_gpu_layers,
     n_batch=n_batch,
     n_ctx = n_ctx,
@@ -37,6 +37,9 @@ while True:
 
     question = input("Enter your input: ")
 
+    if question == "/bye":
+        exit
+
     response = llm_chain.invoke({"question": question})
 
     r_question = response['question']
@@ -51,6 +54,5 @@ while True:
     '''
 
     prompt = PromptTemplate.from_template(following_template)
-
 
 # llm.invoke(question)
