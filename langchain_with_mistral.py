@@ -2,13 +2,16 @@ from langchain_community.llms import LlamaCpp
 from langchain_core.callbacks import CallbackManager, StreamingStdOutCallbackHandler
 from langchain_core.prompts import PromptTemplate
 from langchain.chains import LLMChain
+from langchain.memory import ConversationBufferMemory
 
 template = '''
+{chat_history}
 "<s>[INST] {question} [/INST]"
 '''
 
-prompt = PromptTemplate.from_template(template)
+prompt = PromptTemplate(input_variables=["chat_history", "question"],template=template)
 
+memory = ConversationBufferMemory(memory_key="chat_history")
 
 
 # Callbacks support token-wise streaming
@@ -31,9 +34,9 @@ llm = LlamaCpp(
 )
 # Chain
 
-while True:
+llm_chain = LLMChain(prompt=prompt, llm=llm, memory=memory)
 
-    llm_chain = LLMChain(prompt=prompt, llm=llm)
+while True:
 
     question = input("Enter your input: ")
 
@@ -42,17 +45,3 @@ while True:
 
     response = llm_chain.invoke({"question": question})
 
-    r_question = response['question']
-    r_text = response['text']
-
-    r_question_placeholder = "{question}"
-    following_template = f'''
-    "<s>[INST] {r_question} [/INST]\n
-    {r_text}\n\n
-    [INST] {r_question_placeholder} [/INST]
-    "  
-    '''
-
-    prompt = PromptTemplate.from_template(following_template)
-
-# llm.invoke(question)
