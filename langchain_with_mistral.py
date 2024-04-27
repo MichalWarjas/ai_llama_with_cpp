@@ -4,6 +4,20 @@ from langchain_core.prompts import PromptTemplate
 from langchain.chains import LLMChain
 from langchain.memory import ConversationBufferMemory
 
+def getMultilineInput():
+    lines = []
+    while True:
+        chunk = input("Enter your input: ")
+        if chunk.lower() == '/done':
+            break
+        elif chunk.lower() == '/bye':
+            return chunk.lower()
+            
+        lines.append(chunk)
+                
+    joined_input = "\n".join(lines)
+    return joined_input
+
 template = '''
 {chat_history}
 "<s>[INST] {question} [/INST]"
@@ -38,10 +52,10 @@ llm_chain = LLMChain(prompt=prompt, llm=llm, memory=memory)
 
 while True:
 
-    question = input("Enter your input: ")
+    question = getMultilineInput()
 
     if question == "/bye":
         exit
 
     response = llm_chain.invoke({"question": question})
-
+   

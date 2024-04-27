@@ -2,6 +2,20 @@ from llama_cpp import Llama
 import json
 import sys
 
+def getMultilineInput():
+    lines = []
+    while True:
+        chunk = input("Enter your input: ")
+        if chunk.lower() == '/done':
+            break
+        elif chunk.lower() == '/bye':
+            return chunk.lower()
+            
+        lines.append(chunk)
+                
+    joined_input = "\n".join(lines)
+    return joined_input
+
 if __name__ == "__main__":
 
     default_model = "models/7B/mistral-7b-instruct-v0.2.Q5_K_M.gguf"
@@ -26,22 +40,15 @@ if __name__ == "__main__":
 
     llm = Llama(model_path=mistral_model,n_gpu_layers=gpu_layers, n_ctx=4000, n_threads=4)
 
-    lines = []
     print("-----------------------------------------------------------------------")
     print("")
     print(f"Using model:  {mistral_model} GPU layers: {gpu_layers}")
     print("")
     print("-----------------------------------------------------------------------")
 
-    while True:
-        chunk = input("Enter your input: ")
-        if(chunk == "[/INST]"):
-            break
-        elif(chunk != "[INST]"):
-            lines.append(chunk)
                 
         
-    initial_input = "\n".join(lines)
+    initial_input = "\n".join(getMultilineInput())
 
     prompt = f"""\
     [INST]{initial_input}[/INST]
@@ -59,7 +66,7 @@ if __name__ == "__main__":
         print(output['choices'][0]['text'])
         print(json.dumps(output["usage"], indent=4))
 
-        user_input = input("Enter your input: ")
+        user_input = getMultilineInput()
 
         prompt = F"{output['choices'][0]['text']}\n \n\n### Instruction:\n{user_input}\n\n### Response:"
 

@@ -1,9 +1,23 @@
 from llama_cpp import Llama
 import json
 
+def getMultilineInput():
+    lines = []
+    while True:
+        chunk = input("Enter your input: ")
+        if chunk.lower() == '/done':
+            break
+        elif chunk.lower() == '/bye':
+            return chunk.lower()
+            
+        lines.append(chunk)
+                
+    joined_input = "\n".join(lines)
+    return joined_input
+
 llm = Llama(model_path="models/30B/Wizard-Vicuna-30B-Uncensored.Q5_K_M.gguf", chat_format="llama-2",n_gpu_layers=7, n_ctx=2048)
 
-initial_input = input("Enter your input: ")
+initial_input = getMultilineInput()
 
 prompt = f"""\
 A chat between a curious user and an artificial intelligence assistant. The assistant gives helpful, detailed, and polite answers to the user's questions.
@@ -21,7 +35,7 @@ while True:
     print(output['choices'][0]['text'])
     print(json.dumps(output["usage"], indent=4))
 
-    user_input = input("Enter your input: ")
+    user_input = getMultilineInput()
 
     prompt = F"{output['choices'][0]['text']}\n USER: {user_input}\n ASSISTANT:"
 

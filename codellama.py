@@ -1,18 +1,24 @@
 from llama_cpp import Llama
 import json
 
-llm = Llama(model_path="models/13B/codellama-13b-instruct.Q5_K_M.gguf", chat_format="llama-2",n_gpu_layers=25, n_ctx=10048)
-
-lines = []
-while True:
-    chunk = input("Enter your input: ")
-    if(chunk == "[/INST]"):
-        break
-    elif(chunk != "[INST]"):
+def getMultilineInput():
+    lines = []
+    while True:
+        chunk = input("Enter your input: ")
+        if chunk.lower() == '/done':
+            break
+        elif chunk.lower() == '/bye':
+            return chunk.lower()
+            
         lines.append(chunk)
+                
+    joined_input = "\n".join(lines)
+    return joined_input
+
+llm = Llama(model_path="models/13B/codellama-13b-instruct.Q5_K_M.gguf", chat_format="llama-2",n_gpu_layers=25, n_ctx=10048)
             
     
-initial_input = "\n".join(lines)
+initial_input = "\n".join(getMultilineInput())
 
 prompt = f"""\
 [INST] Write code to solve the following coding problem that obeys the constraints and passes the example test cases.
@@ -32,7 +38,7 @@ while True:
     print(output['choices'][0]['text'])
     print(json.dumps(output["usage"], indent=4))
 
-    user_input = input("Enter your input: ")
+    user_input = getMultilineInput()
 
     prompt = F"{output['choices'][0]['text']}\n [INST]{user_input}\n [/INST]"
 
