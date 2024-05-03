@@ -1,4 +1,5 @@
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from typing import List
 from pydantic import BaseModel
 import llama3_chat
@@ -17,6 +18,17 @@ start_llm()
 
 app = FastAPI()
 
+origins = [
+    "http://localhost:8080",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.on_event("startup")
 async def startup_event():
@@ -30,4 +42,6 @@ async def read_root():
 async def generate(user_input: Query):
     print(f"question received: {user_input.user_input}")
     response = llama3_chat.getAnswer(user_input.user_input)
-    return {"generated_response": response}
+    split_string = response.split('<|assistant|>')
+    final_answer = split_string[-1].strip()
+    return {"generated_response": final_answer}

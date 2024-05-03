@@ -21,3 +21,7 @@ https://developer.nvidia.com/cuda-downloads
 
 To run API server (for now only works with dolphin 8B and phi 4k) run:
 uvicorn api_server:app --reload
+
+call example:
+curl -X POST "http://127.0.0.1:8000/generate" -H "accept: application/json" -H "Content-Type: application/json" -d '{
+"user_input": "who are you?"}'
