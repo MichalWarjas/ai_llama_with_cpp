@@ -10,6 +10,7 @@ conversation_history = ""
 system_message = ""
     
 def getMultilineInput():
+    global conversation_history
     lines = []
     while True:
         chunk = input("Enter your input: ")
@@ -17,6 +18,9 @@ def getMultilineInput():
             break
         elif chunk.lower() == '/bye':
             return chunk.lower()
+        elif chunk.lower() == "/new_topic":
+            conversation_history = ""
+            continue
             
         lines.append(chunk)
                 
@@ -59,12 +63,16 @@ def runLLM(local_model_path, system_message_param, apiMode=False):
             print(llm_answer)
 
 
-def getAnswer(my_question):
+def getAnswer(my_question, new_topic=False):
     global llm
     global conversation_history
     global system_message
 
+    if(new_topic):
+        conversation_history = ""
+
     if(conversation_history == ""):
+        print(f"First question in current topic")
         prompt = f"<|system|>{system_message}<|end|> <|user|>{my_question}<|end|><|assistant|>"
     else:
         prompt = F"{conversation_history}<|end|>\n <|user|>\n{my_question}<|end|>\n<|assistant|>"

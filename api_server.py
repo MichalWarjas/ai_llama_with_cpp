@@ -6,6 +6,7 @@ import llama3_chat
 
 class Query(BaseModel):
     user_input: str
+    new_topic: bool
 
 def start_llm():
     
@@ -39,9 +40,10 @@ async def read_root():
     return {"message": "Welcome to the AI model interface"}
 
 @app.post("/generate")
-async def generate(user_input: Query):
-    print(f"question received: {user_input.user_input}")
-    response = llama3_chat.getAnswer(user_input.user_input)
+async def generate(body_data: Query):
+    print(f"question received: {body_data.user_input}")
+    print(f"New topic: {body_data.new_topic}")
+    response = llama3_chat.getAnswer(body_data.user_input, body_data.new_topic)
     split_string = response.split('<|assistant|>')
     final_answer = split_string[-1].strip()
     return {"generated_response": final_answer}
