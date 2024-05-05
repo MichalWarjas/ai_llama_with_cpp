@@ -48,6 +48,7 @@ def runLLM(local_model_path, system_message_param, apiMode=False):
 
     if apiMode:
         print("Running model in API mode")
+        return f"Model {local_model_path} successfully started"
     else: 
         while True:
             # Get user input
