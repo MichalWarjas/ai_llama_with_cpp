@@ -27,6 +27,14 @@ def getInitializedModel():
 
     return global_model_path
 
+def initializeModel():
+    global llm
+    global model_initialized
+
+    llm = None
+    model_initialized = False
+
+
 def getMultilineInput():
     global conversation_history
     lines = []
@@ -53,8 +61,7 @@ def runLLM(local_model_path, system_message_param, apiMode=False):
     global global_model_path
     global model_initialized
 
-    llm = None
-    model_initialized = False
+    initializeModel()
 
     system_message = system_message_param
 

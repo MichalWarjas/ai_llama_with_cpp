@@ -44,7 +44,10 @@ async def get_llm_status():
     else:
         return {"Status": "Not initialized", "modelName": "None"}
         
-
+@app.post("/initialize")
+async def initializeModel():
+    llama3_chat.initializeModel()
+    return {"Initialized": "true"} 
 
 @app.post("/loadmodel")
 async def loadmodel(body_data: ChosenModel):
