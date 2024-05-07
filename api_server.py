@@ -37,6 +37,15 @@ async def startup_event():
 async def read_root():
     return {"message": "Welcome to the AI model interface"}
 
+@app.get("/status")
+async def get_llm_status():
+    if(llama3_chat.isModelInitialized()):
+        return {"Status": "Initialized", "modelName": llama3_chat.getInitializedModel()}
+    else:
+        return {"Status": "Not initialized", "modelName": "None"}
+        
+
+
 @app.post("/loadmodel")
 async def loadmodel(body_data: ChosenModel):
 

@@ -8,7 +8,25 @@ llm = None # Initialize the model once, outside of the function scope
 gpu_layers = -1
 conversation_history = ""
 system_message = ""
+global_model_path = ""
+model_initialized = False
+
+def isModelInitialized():
+    global llm
+    global model_initialized
     
+    bInitialized = False
+
+    if(model_initialized == True and llm != None):
+        bInitialized = True
+    
+    return bInitialized
+
+def getInitializedModel():
+    global global_model_path
+
+    return global_model_path
+
 def getMultilineInput():
     global conversation_history
     lines = []
@@ -32,8 +50,15 @@ def runLLM(local_model_path, system_message_param, apiMode=False):
     global gpu_layers
     global llm
     global system_message
+    global global_model_path
+    global model_initialized
+
+    llm = None
+    model_initialized = False
 
     system_message = system_message_param
+
+    global_model_path = local_model_path
 
     if "8x7" in local_model_path:
         gpu_layers = 12
@@ -45,6 +70,8 @@ def runLLM(local_model_path, system_message_param, apiMode=False):
     print(f"Using model:  {local_model_path} GPU layers: {gpu_layers}")
     print("")
     print("-----------------------------------------------------------------------")
+
+    model_initialized = True
 
     if apiMode:
         print("Running model in API mode")
