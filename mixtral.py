@@ -48,7 +48,7 @@ if __name__ == "__main__":
 
                 
         
-    initial_input = "\n".join(getMultilineInput())
+    initial_input = "".join(getMultilineInput())
 
     prompt = f"""\
     [INST]{initial_input}[/INST]
@@ -56,7 +56,6 @@ if __name__ == "__main__":
 
     while True:
         # Get user input
-
         output = llm(
         prompt,  
         max_tokens=816, # Generate up to 816 tokens
