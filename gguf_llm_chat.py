@@ -108,9 +108,9 @@ def getAnswer(my_question, new_topic=False):
 
     if(conversation_history == ""):
         print(f"First question in current topic")
-        prompt = f"<|system|>{system_message}<|end|> <|user|>{my_question}<|end|><|assistant|>"
+        prompt = getInitialPrompt(my_question)
     else:
-        prompt = F"{conversation_history}<|end|>\n <|user|>\n{my_question}<|end|>\n<|assistant|>"
+        prompt = getFollowingPrompt(my_question)
 
     output = llm(
         prompt,  
@@ -125,6 +125,25 @@ def getAnswer(my_question, new_topic=False):
     llm_response = conversation_history
 
     return llm_response    
+
+def getInitialPrompt(par_question):
+    global system_message
+    global global_model_path
+
+    if("Phi" in global_model_path or "llama" in global_model_path ):
+        return f"<|system|>{system_message}<|end|> <|user|>{par_question}<|end|><|assistant|>"
+    else:
+        sys.exit('not implemented')
+
+def getFollowingPrompt(par_question):
+    global conversation_history
+    global system_message
+    global global_model_path
+
+    if("Phi" in global_model_path or "llama" in global_model_path ):
+        return F"{conversation_history}<|end|>\n <|user|>\n{par_question}<|end|>\n<|assistant|>"
+    else:
+        sys.exit('not implemented')
 
 if __name__ == "__main__":
     model_choosen = input("Choose model to run (Dolphin or Phi). (D/P) ").lower()
