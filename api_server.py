@@ -75,6 +75,13 @@ async def generate(body_data: Query):
     print(f"question received: {body_data.user_input}")
     print(f"New topic: {body_data.new_topic}")
     response = gguf_llm_chat.getAnswer(body_data.user_input, body_data.new_topic)
-    split_string = response.split('<|assistant|>')
+    if('<|assistant|>' in response):
+        split_string = response.split('<|assistant|>')
+    elif('### Response:' in response):
+        split_string = response.split('### Response:')
+    elif('[/INST]' in response):
+        split_string = response.split('[/INST]')
+    else:
+        return {"generated_response": response}
     final_answer = split_string[-1].strip()
     return {"generated_response": final_answer}
