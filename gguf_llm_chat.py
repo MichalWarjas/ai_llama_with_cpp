@@ -132,7 +132,7 @@ def getInitialPrompt(par_question):
 
     if("Phi" in global_model_path or "llama" in global_model_path ):
         return f"<|system|>{system_message}<|end|> <|user|>{par_question}<|end|><|assistant|>"
-    elif("mistral" in global_model_path or "mixtral" in global_model_path or "bielik" in global_model_path):
+    elif("mistral" in global_model_path or "Mistral" in global_model_path or "mixtral" in global_model_path or "bielik" in global_model_path):
         return f"""\
         [INST]{par_question}[/INST]
         """ 
@@ -146,7 +146,7 @@ def getFollowingPrompt(par_question):
 
     if("Phi" in global_model_path or "llama" in global_model_path ):
         return F"{conversation_history}<|end|>\n <|user|>\n{par_question}<|end|>\n<|assistant|>"
-    elif("mistral" in global_model_path or "mixtral" in global_model_path or "bielik" in global_model_path):
+    elif("mistral" in global_model_path or "Mistral" in global_model_path or "mixtral" in global_model_path or "bielik" in global_model_path):
         return F"{conversation_history}\n \n\n### Instruction:\n{par_question}\n\n### Response:"
     else:
         sys.exit('not implemented')
