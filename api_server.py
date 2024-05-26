@@ -74,18 +74,21 @@ async def loadmodel(body_data: ChosenModel):
 
 @app.post("/generate")
 async def generate(body_data: Query, background_task: BackgroundTasks):
+    global answer_available
+    global answer_to_return
+
+    answer_available = False
+    answer_to_return = {"generated_response": "Running"}
     print(f"question received: {body_data.user_input}")
     print(f"New topic: {body_data.new_topic}")
 
     background_task.add_task(ask_chat, user_question = body_data.user_input, new_topic = body_data.new_topic)
 
-    return {"generated_response": "Running"}
+    return answer_available
 
 def ask_chat(user_question, new_topic=False):
     global answer_available
     global answer_to_return
-
-    answer_available = False
 
     response = gguf_llm_chat.getAnswer(user_question, new_topic)
     if('<|assistant|>' in response):
