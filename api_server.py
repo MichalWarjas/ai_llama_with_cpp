@@ -84,7 +84,7 @@ async def generate(body_data: Query, background_task: BackgroundTasks):
 
     background_task.add_task(ask_chat, user_question = body_data.user_input, new_topic = body_data.new_topic)
 
-    return answer_available
+    return answer_to_return
 
 def ask_chat(user_question, new_topic=False):
     global answer_available
