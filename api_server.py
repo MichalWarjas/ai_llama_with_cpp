@@ -84,7 +84,7 @@ async def generate(body_data: Query, background_task: BackgroundTasks):
 
     background_task.add_task(ask_chat, user_question = body_data.user_input, new_topic = body_data.new_topic)
 
-    return answer_to_return
+    return {"generated_response": "Running"}
 
 def ask_chat(user_question, new_topic=False):
     global answer_available
@@ -111,5 +111,6 @@ async def get_answer():
         print(f"Answer generated: {answer_to_return['generated_response']}")
         return answer_to_return
     else:
+        print("Answer not available yet")
         return {"generated_response": "Running"}
     
