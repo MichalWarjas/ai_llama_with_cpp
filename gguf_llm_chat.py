@@ -114,8 +114,8 @@ def getAnswer(my_question, new_topic=False):
 
     output = llm(
         prompt,  
-        max_tokens=10000, # Generate up to 816 tokens
-        stop=["<|end|>"], 
+        max_tokens=10000, # Generate up to 10000 tokens
+        stop=["|im_start|>","<|user|>","[INST]","### Instruction:"], 
         echo=True # Echo the prompt back in the output
         ) # Generate a completion, can also call create_completion
     
@@ -130,12 +130,20 @@ def getInitialPrompt(par_question):
     global system_message
     global global_model_path
 
-    if("Phi" in global_model_path or "llama" in global_model_path ):
-        return f"<|system|>{system_message}<|end|> <|user|>{par_question}<|end|><|assistant|>"
+    if("llama" in global_model_path ):
+        return f"<|im_start|>system \n{system_message}<|im_end|> \n<|im_start|>user \n{par_question}<|im_end|> \n<|im_start|>assistant"
+    elif("Phi" in global_model_path):
+        return f"<|user|>{par_question}<|end|><|assistant|>"
     elif("mistral" in global_model_path or "Mistral" in global_model_path or "mixtral" in global_model_path or "bielik" in global_model_path):
         return f"""\
-        [INST]{par_question}[/INST]
+        <s>[INST]{par_question}[/INST]
         """ 
+    elif("Codestral" in global_model_path):
+        return f"""<s> [INST] <<SYS>>
+               {system_message}
+               <</SYS>>
+                 
+               {par_question} [/INST]"""
     else:
         sys.exit('not implemented')
 
@@ -144,10 +152,14 @@ def getFollowingPrompt(par_question):
     global system_message
     global global_model_path
 
-    if("Phi" in global_model_path or "llama" in global_model_path ):
+    if("llama" in global_model_path ):
+        return F"{conversation_history}<|im_end|>\n <|im_start|>user \n{par_question}<|im_end|> \n<|im_start|>assistant"
+    elif("Phi" in global_model_path ):
         return F"{conversation_history}<|end|>\n <|user|>\n{par_question}<|end|>\n<|assistant|>"
-    elif("mistral" in global_model_path or "Mistral" in global_model_path or "mixtral" in global_model_path or "bielik" in global_model_path):
-        return F"{conversation_history}\n \n\n### Instruction:\n{par_question}\n\n### Response:"
+    elif("mistral" in global_model_path or "Mistral" in global_model_path or "mixtral" in global_model_path or "bielik" in global_model_path or "Codestral" in global_model_path):
+        return F"{conversation_history}\n </s>[INST]{par_question}[/INST]"
+   ### elif("bielik" in global_model_path):
+   ###     return F"{conversation_history}\n \n\n### Instruction:\n{par_question}\n\n### Response:"
     else:
         sys.exit('not implemented')
 
