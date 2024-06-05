@@ -69,6 +69,8 @@ def runLLM(local_model_path, system_message_param, apiMode=False):
 
     if "8x7" in local_model_path:
         gpu_layers = 12
+    elif "22B" in local_model_path:
+        gpu_layers = 40
 
     llm = Llama(model_path=local_model_path,n_gpu_layers=gpu_layers, n_ctx=10000, n_threads=4)
 
