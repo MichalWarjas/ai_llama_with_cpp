@@ -1,5 +1,4 @@
-Partially copied from (localGPT.py and dependencies)
-https://github.com/PromtEngineer/localGPT
+API for various locals language models
 
 
 Requirements:
@@ -19,9 +18,9 @@ Install both as described here
 https://developer.nvidia.com/cuda-downloads
 
 
-To run API server (for now only works with dolphin 8B and phi 4k) run:
+To run API server run:
 uvicorn api_server:app --reload
 
-call example:
+API
 curl -X POST "http://127.0.0.1:8000/generate" -H "accept: application/json" -H "Content-Type: application/json" -d '{
 "user_input": "who are you?"}'
